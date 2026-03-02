@@ -596,13 +596,13 @@ public class CompasSclDataPostgreSQLRepository implements CompasSclDataRepositor
         }
 
         if (author != null) {
-            sqlBuilder.append(" AND subquery.created_by = ?");
-            parameters.add(author);
+            sqlBuilder.append(" AND subquery.created_by ILIKE ? ");
+            parameters.add("%" + author + "%");
         }
 
         if (location != null) {
-            sqlBuilder.append(" AND subquery.location = ?");
-            parameters.add(location);
+            sqlBuilder.append(" AND l.id = ?");
+            parameters.add(UUID.fromString(location));
         }
 
         if (from != null) {
@@ -1282,7 +1282,7 @@ public class CompasSclDataPostgreSQLRepository implements CompasSclDataRepositor
     }
 
     @Override
-    public IArchivedResourcesMetaItem searchArchivedResource(String locationId, String name, String approver, String contentType, String type, String voltage, OffsetDateTime from, OffsetDateTime to) {
+    public IArchivedResourcesMetaItem searchArchivedResource(String locationId, String name, String author,String approver,String contentType, String type, String voltage, OffsetDateTime from, OffsetDateTime to) {
         List<Object> parameters = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append("""
@@ -1346,10 +1346,15 @@ public class CompasSclDataPostgreSQLRepository implements CompasSclDataRepositor
             parameters.add("%"+name+"%");
             sb.append(" AND (rr.filename ILIKE ? OR sf.name ILIKE ?)");
         }
+        if (author != null && !author.isBlank()) {
+            parameters.add("%"+author+"%");
+            parameters.add("%"+author+"%");
+            sb.append(" AND (rr.author ILIKE ? OR sf.created_by ILIKE ?)");
+        }
         if (approver != null && !approver.isBlank()) {
-            parameters.add(approver);
-            parameters.add(approver);
-            sb.append(" AND (rr.approver = ? OR xml_data.hitem_who::varchar = ?)");
+            parameters.add("%"+approver+"%");
+            parameters.add("%"+approver+"%");
+            sb.append(" AND (rr.approver ILIKE ? OR xml_data.hitem_who::varchar ILIKE ?)");
         }
         if (contentType != null && !contentType.isBlank()) {
             parameters.add(contentType);

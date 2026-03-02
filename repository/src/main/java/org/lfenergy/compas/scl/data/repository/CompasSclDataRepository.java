@@ -278,6 +278,7 @@ public interface CompasSclDataRepository {
      *
      * @param location The location of the archived resource
      * @param name The name of the archived resource
+     * @param author The author of the archived resource
      * @param approver The approver of the archived resource
      * @param contentType The content type of the resource
      * @param type The type of the resource
@@ -286,7 +287,7 @@ public interface CompasSclDataRepository {
      * @param to The end timestamp of archiving (including)
      * @return All archived entries matching the search criteria
      */
-    IArchivedResourcesMetaItem searchArchivedResource(String location, String name, String approver, String contentType, String type, String voltage, OffsetDateTime from, OffsetDateTime to);
+    IArchivedResourcesMetaItem searchArchivedResource(String location, String name, String author, String approver, String contentType, String type, String voltage, OffsetDateTime from, OffsetDateTime to);
 
     /**
      * Retrieve all archived resource history versions according to an archived resource id

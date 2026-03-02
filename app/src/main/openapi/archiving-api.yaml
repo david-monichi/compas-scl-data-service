@@ -710,6 +710,9 @@ components:
         name:
           type: string
           description: "Partially match allowed"
+        author:
+          type: string
+          description: "Partially match allowed"
         approver:
           type: string
           description: "Fulltext match which can be retrieved via extra endpoint"

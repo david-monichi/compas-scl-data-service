@@ -116,7 +116,7 @@ class ArchiveResourceTest {
         IAbstractArchivedResourceMetaItem testData2 = new ArchivedSclResourceTestDataBuilder().setId(uuid2.toString()).setName(name).setVersion(version).build();
         IArchivedResourcesMetaItem archivedResources = new ArchivedResourcesMetaItem(List.of(testData1, testData2));
 
-        when(compasSclDataService.searchArchivedResources(null, name, null,null,null,null,null, null)).thenReturn(archivedResources);
+        when(compasSclDataService.searchArchivedResources(null, name, null,null,null,null,null,null, null)).thenReturn(archivedResources);
         Response response = given()
             .contentType(MediaType.APPLICATION_JSON)
             .body("{\"name\": \"Name\"}")
@@ -134,6 +134,37 @@ class ArchiveResourceTest {
         assertEquals(name, result.getResources().get(1).getName());
         assertEquals(version, result.getResources().get(1).getVersion());
     }
+
+
+    @Test
+    void searchArchivedResources_WhenCalledOnlyWithAuthor_ThenReturnsMatchingArchivedResources() {
+        UUID uuid = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+        String name = "Name";
+        String version = "1.0.0";
+        String author1 = "John Doe";
+        String author2 = "John Smith";
+        IAbstractArchivedResourceMetaItem testData1 = new ArchivedSclResourceTestDataBuilder().setId(uuid.toString()).setName(name).setVersion(version).setAuthor(author1).build();
+        IAbstractArchivedResourceMetaItem testData2 = new ArchivedSclResourceTestDataBuilder().setId(uuid2.toString()).setName(name).setVersion(version).setAuthor(author2).build();
+        IArchivedResourcesMetaItem archivedResources = new ArchivedResourcesMetaItem(List.of(testData1, testData2));
+
+        when(compasSclDataService.searchArchivedResources(null, null, "John",null,null,null,null,null, null)).thenReturn(archivedResources);
+        Response response = given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("{\"author\": \"John\"}")
+                .when().post("/resources/search")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        ArchivedResources result = response.as(ArchivedResources.class);
+        assertEquals(uuid, UUID.fromString(result.getResources().get(0).getUuid()));
+        assertEquals(author1, result.getResources().get(0).getAuthor());
+        assertEquals(uuid2, UUID.fromString(result.getResources().get(1).getUuid()));
+        assertEquals(author2, result.getResources().get(1).getAuthor());
+    }
+
 
     @Test
     void retrieveArchivedResourceHistory_WhenCalledWithUuid_ThenReturnsMatchingArchivedResources() {

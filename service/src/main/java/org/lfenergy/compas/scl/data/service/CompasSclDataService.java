@@ -745,8 +745,8 @@ public class CompasSclDataService {
      * @return All archived entries matching the search criteria
      */
     @Transactional(SUPPORTS)
-    public IArchivedResourcesMetaItem searchArchivedResources(String locationId, String name, String approver, String contentType, String type, String voltage, OffsetDateTime from, OffsetDateTime to) {
-        return repository.searchArchivedResource(locationId, name, approver, getSclFileType(contentType), type, voltage, from, to);
+    public IArchivedResourcesMetaItem searchArchivedResources(String locationId, String name, String author, String approver, String contentType, String type, String voltage, OffsetDateTime from, OffsetDateTime to) {
+        return repository.searchArchivedResource(locationId, name, author, approver, getSclFileType(contentType), type, voltage, from, to);
     }
 
     private String getSclFileType(String contentType) {

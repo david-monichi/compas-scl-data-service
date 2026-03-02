@@ -78,13 +78,14 @@ public class ArchiveResource implements ArchivingApi {
         }
         String locationId = archivedResourcesSearch.getLocation();
         String name = archivedResourcesSearch.getName();
+        String author = archivedResourcesSearch.getAuthor();
         String approver = archivedResourcesSearch.getApprover();
         String contentType = archivedResourcesSearch.getContentType();
         String type = archivedResourcesSearch.getType();
         String voltage = archivedResourcesSearch.getVoltage();
         OffsetDateTime from = archivedResourcesSearch.getFrom();
         OffsetDateTime to = archivedResourcesSearch.getTo();
-        return compasSclDataService.searchArchivedResources(locationId, name, approver, contentType, type, voltage, from, to);
+        return compasSclDataService.searchArchivedResources(locationId, name, author, approver, contentType, type, voltage, from, to);
     }
 
     private ArchivedResource mapToArchivedResource(IAbstractArchivedResourceMetaItem archivedResource) {
